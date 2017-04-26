@@ -31,6 +31,16 @@ app.use(session({
 
 app.use(flash());
 
+app.locals.blog = {
+    title: pkg.name
+};
+
+app.use(function(req, res, next) {
+    res.locals.user = req.session.user;
+    res.locals.success = req.flash('success').toString();
+    res.locals.error = req.flash('error').toString();
+});
+
 routes(app);
 
 app.listen(config.port, function() {
