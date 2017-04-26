@@ -11,7 +11,7 @@ router.post('/', checkNotLogin, function(req, res) {
 
 //sign up web page
 router.get('/', checkNotLogin, function(req, res) {
-    res.send(req.flash());
+    res.render('signup');
 });
 
 module.exports = router;

@@ -1,0 +1,42 @@
+
+
+<%- include('header') %>
+
+<div class="ui grid">
+    <div class="four wide column"></div>
+    <div class="eight wide column">
+        <form action="post" class="ui form segment" enctype="multipart/form-data">
+            <div class="field required">
+                <label>User Name</label>
+                <input type="text" placeholder="user name" name="name">
+            </div>
+            <div class="field required">
+                <label>Password</label>
+                <input type="password" placeholder="password" name="password">
+            </div>
+            <div class="field required">
+                <label>Repeat Password</label>
+                <input type="password" placeholder="password" name="repassword">
+            </div>
+            <div class="field required">
+                <label>Gender</label>
+                <select class="ui compact selection dropdown" name="gender">
+                    <option value="m">male</option>
+                    <option value="f">female</option>
+                    <option value="x">not specified</option>
+                </select>
+            </div>
+            <div class="field required">
+                <label>Avatar</label>
+                <input type="file" name="avatar">
+            </div>
+            <div class="field required">
+                <label>Profile</label>
+                <textarea name="bio" v-model="user.bio" rows="5"></textarea>
+            </div>
+            <input type="submit" class="ui button fluid" value="sign up">
+        </form>
+    </div>
+</div>
+
+<%- include('footer') %>
