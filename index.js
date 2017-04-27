@@ -8,11 +8,13 @@ var flash = require('connect-flash');
 var config = require('config-lite')(__dirname);
 var routes = require('./routes');
 var pkg = require('./package');
+var mongoose = require('mongoose');
 
 var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+mongoose.connect(config.mongodb);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -30,6 +32,12 @@ app.use(session({
 }));
 
 app.use(flash());
+
+// 处理表单及文件上传的中间件
+app.use(require('express-formidable')({
+  uploadDir: path.join(__dirname, 'public/img'),// 上传文件目录
+  keepExtensions: true// 保留后缀
+}));
 
 app.locals.blog = {
     title: pkg.name

@@ -15,7 +15,7 @@ router.get('/create', checkLogin, function(req, res) {
 
 //get all articles
 router.get('/', function(req, res) {
-    res.send(req.flash());
+    res.render('posts');
 });
 
 //get a specific article
@@ -40,10 +40,6 @@ router.post('/postID/edit', checkLogin, function(req, res) {
     res.send(req.flash());
 });
 
-//make a comment
-router.post('/', checkLogin, function(req, res) {
-    res.send(req.flash());
-});
 
 //create a comment
 router.post('/postID/comment', checkLogin, function(req, res) {
