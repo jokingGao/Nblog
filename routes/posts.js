@@ -7,7 +7,7 @@ var checkLogin = require('../middlewares/check').checkLogin;
 router.post('/', checkLogin, function(req, res, next) {
     var title = req.fields.title;
     var content = req.fields.content;
-    var author = req.session._id;
+    var author = req.session.user._id;
     
     //check condition
     try {

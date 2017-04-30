@@ -14,11 +14,7 @@ var post = mongoose.model("Post", postSchema);
 
 var createPost = function(blogPost) {
     var newPost = new post(blogPost);
-    return newPost.save(function(err) {
-        if (err) {
-            console.log(err);
-        }
-    });
+    return newPost.save();
 }
 
 var getPosts = function(author) {
