@@ -22,21 +22,21 @@ router.post('/', checkLogin, function(req, res) {
         return res.redirect('back');
     }
 
-    var post = postModel({
+    var post = {
         author: author,
         title: title,
         content: content,
         view: 0
-    });
+    };
 
-    post.save(function(err) {
-        if (err) {
-            req.flash('error', err);
-            res.redirect('back');
-        }
-        req.flash('success', 'You have posted it successfully!');
-        res.redirect(`/posts/{post._id}`);
-    });
+
+    postModel.createPost(post)
+    .then(function(result) {
+        post = result;
+        req.flash('success', 'Posted successfully!');
+        res.redirect(`/posts/{post._id}`)
+    })
+    .catch();
 });
 
 //get to the article posting page
@@ -46,7 +46,8 @@ router.get('/create', checkLogin, function(req, res) {
 
 //get all articles
 router.get('/', function(req, res) {
-    res.render('posts');
+    var author = req.query.author;
+    
 });
 
 //get a specific article

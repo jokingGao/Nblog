@@ -10,4 +10,17 @@ var postSchema = new Schema({
 
 var post = mongoose.model("Post", postSchema);
 
-module.exports = post;
+var createPost = function(blogPost) {
+    var newPost = new post(blogPost);
+    return newPost.save(function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+}
+
+
+
+module.exports = {
+    createPost: createPost
+};
