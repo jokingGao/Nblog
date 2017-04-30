@@ -4,7 +4,7 @@ var postModel = require('../models/postModel');
 var checkLogin = require('../middlewares/check').checkLogin;
 
 //post an  article
-router.post('/', checkLogin, function(req, res) {
+router.post('/', checkLogin, function(req, res, next) {
     var title = req.fields.title;
     var content = req.fields.content;
     var author = req.session._id;
@@ -36,7 +36,7 @@ router.post('/', checkLogin, function(req, res) {
         req.flash('success', 'Posted successfully!');
         res.redirect(`/posts/{post._id}`)
     })
-    .catch();
+    .catch(next);
 });
 
 //get to the article posting page
@@ -45,8 +45,14 @@ router.get('/create', checkLogin, function(req, res) {
 });
 
 //get all articles
-router.get('/', function(req, res) {
+router.get('/', function(req, res, next) {
+    
     var author = req.query.author;
+    postModel.getPosts(author)
+    .then(function(posts) {
+        res.render('posts', {posts: posts})
+    })
+    .catch(next);
     
 });
 

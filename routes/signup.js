@@ -7,7 +7,7 @@ var path = require('path');
 var fs = require('fs');
 
 //user sign up request
-router.post('/', checkNotLogin, function(req, res) {
+router.post('/', checkNotLogin, function(req, res, next) {
     var name = req.fields.name;
     var gender = req.fields.gender;
     var bio = req.fields.bio;
@@ -32,22 +32,29 @@ router.post('/', checkNotLogin, function(req, res) {
         return res.redirect('/signup');
     }
     password = sha1(password);
-    var user = userModel({
+    var user = {
         username: name,
         gender: gender,
         bio: bio,
         password: password,
         avatar: avatar
-    });
+    };
 
-    user.save(function(err) {
-        if (err) {
-            req.flash('error', 'failed to sign up!');
-            return res.redirect('/signup');
+    userModel.createUser(user)
+    .then(function(result) {
+        
+        delete result.password;
+        req.session.user = result;
+        req.flash('success', 'Signed up successfully!');
+        res.redirect('/posts');
+    })
+    .catch(function(e) {
+        fs.unlink(req.files.avatar.path);
+        if (e.message.match('E11000 duplicate key')) {
+            req.flash('error', 'user name already exists!');
+            res.redirect('/signup');
         }
-        //req.session.user = result;
-        req.flash('success', 'You have signed up successfully!');
-        return res.redirect('/posts');
+        next(e);
     });
 });
 

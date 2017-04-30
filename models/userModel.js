@@ -12,4 +12,11 @@ var userSchema = new Schema({
 
 var user = mongoose.model('User', userSchema);
 
-module.exports = user;
+var createUser = function(NUser) {
+    var newUser = new user(NUser);
+    return newUser.save();
+}
+
+module.exports = {
+    createUser: createUser
+};

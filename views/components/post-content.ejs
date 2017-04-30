@@ -5,12 +5,12 @@
             <a class="avatar" href="/posts?author=<%= post.author._id %>"
             data-title="<%= post.author.name %>"
             data-content="<%= post.author.bio %>"></a>
-            <img src="/img/<%= post.author.avatar" alt="Avatar">
+            <img src="/img/<%= post.author.avatar %>" alt="Avatar">
         </div>
         <div class="eight wide column">
             <div class="ui segment">
                 <h3><a href="/posts/<%= post._id %>"><%= post.title %></a></h3>
-                <p><%= post.content %></p>
+                <pre><%= post.content %></pre>
                 <div>
                     <span class="tag"><%= post.created_at %></span>
                     <span class="tag right">
