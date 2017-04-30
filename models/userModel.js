@@ -17,6 +17,12 @@ var createUser = function(NUser) {
     return newUser.save();
 }
 
+var getUserByName = function(name) {
+    return user.findOne({ username: name})
+    .exec();
+}
+
 module.exports = {
-    createUser: createUser
+    createUser: createUser,
+    getUserByName: getUserByName
 };

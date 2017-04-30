@@ -9,10 +9,11 @@ router.get('/', checkNotLogin, function(req, res) {
     res.render('signin');
 });
 
-router.post('/', checkNotLogin, function(req, res) {
+router.post('/', checkNotLogin, function(req, res, next) {
     var name = req.fields.name;
     var password = req.fields.password;
-    userModel.findOne({username: name}).exec(function(err, user) {
+    userModel.getUserByName(name)
+    .then(function(user) {
         if (!user) {
             req.flash('error', 'User does not exist!');
             return res.redirect('back');
@@ -24,7 +25,8 @@ router.post('/', checkNotLogin, function(req, res) {
         req.flash('success', 'You have signed in successfully!');
         req.session.user = user;
         res.redirect('/posts');
-    });
+    })
+    .catch(next);
 });
 
 module.exports = router;
