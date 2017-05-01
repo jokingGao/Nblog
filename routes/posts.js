@@ -76,29 +76,63 @@ router.get('/:postID', function(req, res, next) {
 
 
 //delete an article
-router.get('/postID/remove', checkLogin, function(req, res) {
-    res.send(req.flash());
+router.get('/:postID/remove', checkLogin, function(req, res, next) {
+    var postID = req.params.postID;
+    var author = req.session.user._id;
+
+    postModel.deletePostByID(postID, author)
+    .then(function() {
+        req.flash('success', 'Delete successfully!');
+        res.redirect('/posts');
+    })
+    .catch(next);
 });
 
 
 //get to the article editing page
-router.get('/postID/edit', checkLogin, function(req, res) {
-    res.send(req.flash());
+router.get('/:postID/edit', checkLogin, function(req, res, next) {
+    var postID = req.params.postID;
+    var author = req.session.user._id;
+    postModel.getPostByID(postID)
+    .then(function(post) {
+        if (!post) {
+            throw new Error('This post does not exist!');
+        }
+        if (author.toString() !== post.author._id.toString()) {
+            throw new Error('You do not have authority!');
+        }
+        res.render('edit', { post: post});
+    })
+    .catch(next);
 });
 
 //edit an article
-router.post('/postID/edit', checkLogin, function(req, res) {
-    res.send(req.flash());
+router.post('/:postID/edit', checkLogin, function(req, res, next) {
+    var postID = req.params.postID;
+    var author = req.session.user._id;
+    var content = req.fields.content;
+    var title = req.fields.title;
+
+    var data = {
+        title: title,
+        content: content
+    };
+    postModel.updatePostByID(postID, author, data)
+    .then(function(post) {
+        req.flash('success', 'You have edited it successfully!');
+        res.redirect(`/posts/${postID}`);
+    })
+    .catch(next);
 });
 
 
 //create a comment
-router.post('/postID/comment', checkLogin, function(req, res) {
+router.post('/:postID/comment', checkLogin, function(req, res) {
         res.send(req.flash());
 });
 
 //delete a comment
-router.get('/postID/comment/commentID/remove', checkLogin, function(req, res) {
+router.get('/:postID/comment/:commentID/remove', checkLogin, function(req, res) {
         res.send(req.flash());
 });
 

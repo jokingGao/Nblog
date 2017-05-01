@@ -40,10 +40,21 @@ var getPostByID = function(postID) {
     .exec();
 }
 
+var updatePostByID = function(postID, author, data) {
+    return post.update({ _id: postID, author: author }, { $set: data })
+    .exec();
+}
+
+var deletePostByID = function(postID, author) {
+    return post.remove({ _id: postID, author: author})
+    .exec();
+}
 
 module.exports = {
     createPost: createPost,
     getPosts: getPosts,
     incView: incView,
-    getPostByID: getPostByID
+    getPostByID: getPostByID,
+    updatePostByID: updatePostByID,
+    deletePostByID: deletePostByID
 };
