@@ -29,6 +29,9 @@ var getPosts = function(author) {
                 .exec();
 }
 
+var incView = function(postID) {
+    return post.update({ _id: postID}, { $inc: { view: 1 } }).exec();
+}
 
 module.exports = {
     createPost: createPost,

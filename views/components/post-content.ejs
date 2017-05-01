@@ -4,8 +4,9 @@
         <div class="four wide column">
             <a class="avatar" href="/posts?author=<%= post.author._id %>"
             data-title="<%= post.author.name %>"
-            data-content="<%= post.author.bio %>"></a>
-            <img src="/img/<%= post.author.avatar %>" alt="Avatar">
+            data-content="<%= post.author.bio %>">
+            <img src="/img/<%= post.author.avatar %>" alt="Avatar" class="avatar">
+            </a>
         </div>
         <div class="eight wide column">
             <div class="ui segment">
