@@ -30,10 +30,20 @@ var getPosts = function(author) {
 }
 
 var incView = function(postID) {
-    return post.update({ _id: postID}, { $inc: { view: 1 } }).exec();
+    return post.update({ _id: postID}, { $inc: { view: 1 } })
+    .exec();
 }
+
+var getPostByID = function(postID) {
+    return post.findById(postID)
+    .populate({ path: 'author', model: 'User' })
+    .exec();
+}
+
 
 module.exports = {
     createPost: createPost,
-    getPosts: getPosts
+    getPosts: getPosts,
+    incView: incView,
+    getPostByID: getPostByID
 };

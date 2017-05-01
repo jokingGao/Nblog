@@ -57,8 +57,21 @@ router.get('/', function(req, res, next) {
 });
 
 //get a specific article
-router.get('/:postID', function(req, res) {
-    res.send(req.flash());
+router.get('/:postID', function(req, res, next) {
+    var postID = req.params.postID;
+
+    Promise.all([
+        postModel.getPostByID(postID),
+        postModel.incView(postID)
+    ])
+    .then(function(result) {
+        var post = result[0];
+        if (!post) {
+            throw new Error('This post does not exist!');
+        }
+        res.render('post', { post: post});
+    })
+    .catch(next);
 });
 
 
