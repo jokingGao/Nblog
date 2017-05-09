@@ -35,7 +35,7 @@ router.post('/', checkLogin, function(req, res, next) {
     .then(function(result) {
         post = result;
         req.flash('success', 'Posted successfully!');
-        res.redirect(`/posts/{post._id}`)
+        res.redirect(`/posts/${post._id}`)
     })
     .catch(next);
 });
