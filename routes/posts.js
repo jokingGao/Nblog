@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var postModel = require('../models/postModel');
+var commentModel = require('../models/commentModel');
 var checkLogin = require('../middlewares/check').checkLogin;
 
 //post an  article
@@ -62,14 +63,16 @@ router.get('/:postID', function(req, res, next) {
 
     Promise.all([
         postModel.getPostByID(postID),
+        commentModel.getComments(postID),
         postModel.incView(postID)
     ])
     .then(function(result) {
         var post = result[0];
+        var comments = result[1];
         if (!post) {
             throw new Error('This post does not exist!');
         }
-        res.render('post', { post: post});
+        res.render('post', { post: post, comments: comments});
     })
     .catch(next);
 });

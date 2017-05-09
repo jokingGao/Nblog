@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var commentModel = require('./commentModel');
 
 var postSchema = new Schema({
     author: {type: Schema.Types.ObjectId},
@@ -10,6 +11,28 @@ var postSchema = new Schema({
 
 var post = mongoose.model("Post", postSchema);
 
+var addCommentsCount = function(schema) {
+    schema.post('find', function(posts) {
+        return Promise.all(posts.map(function(post){
+            return commentModel.getCommentsCount(post._id).then(function(commentsCount) {
+                post.commentsCount = commentsCount;
+                return post;
+            });
+        })); 
+    });
+    schema.post('findOne', function(post) {
+        if (post) {
+            return commentModel.getCommentsCount(post._id).then(function(commentsCount) {
+                post.commentsCount = commentsCount;
+                return post;
+            });
+        }
+
+        return post;
+    });
+}
+
+postSchema.plugin(addCommentsCount);
 
 
 var createPost = function(blogPost) {
@@ -47,7 +70,12 @@ var updatePostByID = function(postID, author, data) {
 
 var deletePostByID = function(postID, author) {
     return post.remove({ _id: postID, author: author})
-    .exec();
+    .exec()
+    .then(function(res) {
+        if (res.result.ok && res.result.n > 0) {
+            commentModel.delCommentsByPostID(postID);
+        }
+    });
 }
 
 module.exports = {

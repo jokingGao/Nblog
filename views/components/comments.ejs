@@ -1,0 +1,36 @@
+
+<div class="ui grid">
+    <div class="ui four wide column"></div> 
+    <div class="ui eight wide column">
+        <div class="ui segment">
+            <div class="ui minimal comments">
+                <h3 class="ui dividing header">comments</h3>
+                <% comments.forEach(function(comment) { %>
+                    <div class="comment">
+                        <span class="avatar">
+                            <img src="/img/<%= comment.author.avatar %>" alt="avatar">
+                        </span>
+                        <div class="content">
+                            <a href="/posts?author=<%= comment.author._id %>"><%= comment.author.username %></a>
+                            <div class="text"><%= comment.content %></div>
+                        </div>
+                        <% if(user && comment.author._id && comment.author._id.toString() === user._id.toString()) { %>
+                        <div class="action">
+                            <a href="/posts/<%= post._id %>/comment/<%= comment._id %>/remove">delete</a>
+                        </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+
+                <% if (user) { %>
+                    <form action="/posts/<%= post._id %>/comment" method="post" class="ui reply form">
+                        <div class="field">
+                            <textarea name="content"></textarea>
+                        </div>
+                        <input type="submit" class="ui icon button" value="comment" />
+                    </form>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
