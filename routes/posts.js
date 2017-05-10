@@ -51,6 +51,10 @@ router.get('/', function(req, res, next) {
     var author = req.query.author;
     postModel.getPosts(author)
     .then(function(posts) {
+        posts.forEach(function(post) {
+            post = post.toObject();
+            post.commentsCount = commentModel.getCommentsCount(post._id);
+        });
         res.render('posts', {posts: posts})
     })
     .catch(next);
@@ -130,13 +134,35 @@ router.post('/:postID/edit', checkLogin, function(req, res, next) {
 
 
 //create a comment
-router.post('/:postID/comment', checkLogin, function(req, res) {
-        res.send(req.flash());
+router.post('/:postID/comment', checkLogin, function(req, res, next) {
+        var content = req.fields.content;
+        var postID = req.params.postID;
+        var author = req.session.user._id;
+
+        var comment = {
+            author: author,
+            content: content,
+            postID: postID
+        };
+        commentModel.create(comment)
+        .then(function() {
+            req.flash('success', 'You have commented successfully!');
+            res.redirect('back');
+        })
+        .catch(next);
 });
 
 //delete a comment
-router.get('/:postID/comment/:commentID/remove', checkLogin, function(req, res) {
-        res.send(req.flash());
+router.get('/:postID/comment/:commentID/remove', checkLogin, function(req, res, next) {
+        var commentID = req.params.commentID;
+        var author = req.session.user._id;
+        commentModel.deleteCommentByID(commentID, author)
+        .then(function() {
+            req.flash('success', 'Deleted comment successfully!');
+            //return to the previous page after the operation
+            res.redirect('back');
+        })
+        .catch(next);
 });
 
 module.exports = router;

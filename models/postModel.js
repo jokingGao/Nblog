@@ -9,13 +9,13 @@ var postSchema = new Schema({
     view: Number
 });
 
-var post = mongoose.model("Post", postSchema);
 
 var addCommentsCount = function(schema) {
     schema.post('find', function(posts) {
         return Promise.all(posts.map(function(post){
             return commentModel.getCommentsCount(post._id).then(function(commentsCount) {
                 post.commentsCount = commentsCount;
+                //console.log(post);
                 return post;
             });
         })); 
@@ -32,7 +32,12 @@ var addCommentsCount = function(schema) {
     });
 }
 
+
+
 postSchema.plugin(addCommentsCount);
+var post = mongoose.model("Post", postSchema);
+
+
 
 
 var createPost = function(blogPost) {
