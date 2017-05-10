@@ -27,13 +27,9 @@ var addCommentsCount = function(schema) {
                 return post;
             });
         }
-
         return post;
     });
 }
-
-
-
 postSchema.plugin(addCommentsCount);
 var post = mongoose.model("Post", postSchema);
 
