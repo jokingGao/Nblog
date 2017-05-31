@@ -9,6 +9,8 @@ var config = require('config-lite')(__dirname);
 var routes = require('./routes');
 var pkg = require('./package');
 var mongoose = require('mongoose');
+var winston = require('winston');
+var expressWinston = require('express-winston');
 
 var app = express();
 
@@ -50,7 +52,32 @@ app.use(function(req, res, next) {
     next();
 });
 
+//successful log
+app.use(expressWinston.logger({
+    transports: [
+        new (winston.transports.Console) ({
+            json: true,
+            colorize: true
+        }),
+        new winston.transports.File ({
+            filename: 'logs/success.log'
+        })
+    ]
+}));
 routes(app);
+
+//error log
+app.use(expressWinston.logger({
+    transports: [
+        new (winston.transports.Console) ({
+            json: true,
+            colorize: true
+        }),
+        new winston.transports.File ({
+            filename: 'logs/error.log'
+        })
+    ]
+}));
 
 //error page
 app.use(function(err, req, res, next) {
